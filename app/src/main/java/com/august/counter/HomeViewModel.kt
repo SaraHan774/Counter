@@ -23,14 +23,6 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun getDaysAhead(unit: Int): List<LocalDate> {
-        val list = mutableListOf<LocalDate>()
-        for (i in 1..10) {
-            list.add(counter.count((i * unit).toLong()))
-        }
-        return list
-    }
-
     fun showDatePicker() {
         _homeUiState.update {
             it.copy(isDatePickerVisible = true)
@@ -41,5 +33,13 @@ class HomeViewModel : ViewModel() {
         _homeUiState.update {
             it.copy(isDatePickerVisible = false)
         }
+    }
+
+    private fun getDaysAhead(unit: Int): List<LocalDate> {
+        val list = mutableListOf<LocalDate>()
+        for (i in 1..10) {
+            list.add(counter.count((i * unit).toLong()))
+        }
+        return list
     }
 }

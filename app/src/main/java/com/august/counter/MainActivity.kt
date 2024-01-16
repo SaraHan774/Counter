@@ -4,20 +4,33 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,12 +48,27 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             CounterTheme {
-                Home()
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            colors = topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                titleContentColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            title = {
+                                Text("🐿️💛")
+                            }
+                        )
+                    }
+                ){ paddingValues ->
+                    Home(modifier = Modifier.padding(paddingValues))
+                }
             }
         }
     }
@@ -48,27 +76,37 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Home(
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel()
 ) {
     val uiState by viewModel.homeUiState.collectAsState()
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
+        modifier = modifier.fillMaxSize()
     ) {
-        Button(onClick = { viewModel.showDatePicker() }) {
-            Text(text = "Set Start Date")
-        }
-
         LazyColumn {
             itemsIndexed(items = uiState.daysAhead) { index, date ->
-                Row {
-                    Text(text = "Day ${(index + 1) * uiState.countUnit}")
-                    Spacer(modifier = Modifier.size(24.dp))
-                    Text(text = "${date.year}.${date.monthNumber}.${date.dayOfMonth}")
-                }
+                ListItem(
+                    modifier = Modifier.padding(
+                        vertical = 8.dp,
+                        horizontal = 16.dp,
+                    ),
+                    headlineContent = {
+                        Text(text = "Day ${(index + 1) * uiState.countUnit}")
+                    },
+                    supportingContent = {
+                        Text(text = "${date.year}.${date.monthNumber}.${date.dayOfMonth}")
+                    },
+                    shadowElevation = 8.dp
+                )
             }
+        }
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(24.dp),
+            onClick = { viewModel.showDatePicker() }
+        ) {
+            Icon(imageVector = Icons.Rounded.DateRange, contentDescription = "")
         }
     }
 

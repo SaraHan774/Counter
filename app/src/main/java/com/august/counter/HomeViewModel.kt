@@ -7,11 +7,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.datetime.LocalDate
 
 class HomeViewModel : ViewModel() {
-
     private val _homeUiState = MutableStateFlow(HomeUiState())
     val homeUiState = _homeUiState.asStateFlow()
 
+    private lateinit var counter: Counter
+
     fun onDateSelected(startDate: LocalDate) {
+        counter = Counter(startDate)
         hideDatePicker()
         _homeUiState.update {
             it.copy(
@@ -22,7 +24,6 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun getDaysAhead(unit: Int): List<LocalDate> {
-        val counter = Counter(homeUiState.value.selectedDate)
         val list = mutableListOf<LocalDate>()
         for (i in 1..10) {
             list.add(counter.count((i * unit).toLong()))

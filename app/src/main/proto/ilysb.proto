@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option java_package = "com.august.counter";
+option java_multiple_files = true;
+
+message UserLocalDate {
+    int32 year = 1;
+    int32 month = 2;
+    int32 day = 3;
+}

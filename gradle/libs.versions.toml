@@ -1,5 +1,6 @@
 [versions]
 agp = "8.4.0-alpha03"
+datastore = "1.0.0"
 junitJupiter = "5.8.1"
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
@@ -12,9 +13,11 @@ activityCompose = "1.8.2"
 composeBom = "2023.08.00"
 lifecycleViewmodelComposeKtx = "2.6.2"
 material3Android = "1.2.0-beta02"
+protobufJavalite = "3.18.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 androidx-lifecycle-viewmodel-compose-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-compose-ktx", version.ref = "lifecycleViewmodelComposeKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -32,6 +35,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobufJavalite" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -4,18 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.Button
@@ -38,8 +31,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.august.counter.ui.theme.CounterTheme
 import kotlinx.datetime.Instant
@@ -48,24 +47,13 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             CounterTheme {
                 Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            colors = topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                titleContentColor = MaterialTheme.colorScheme.primary,
-                            ),
-                            title = {
-                                Text("🐿️💛")
-                            }
-                        )
-                    }
+                    topBar = { HomeTopAppBar() }
                 ){ paddingValues ->
                     Home(modifier = Modifier.padding(paddingValues))
                 }
@@ -75,14 +63,41 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun HomeTopAppBar() {
+    TopAppBar(
+        colors = topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        ),
+        title = { TitleText() }
+    )
+}
+
+@Composable
+private fun TitleText() {
+    Text(
+        text = "ILYSB",
+        style = TextStyle(
+            fontSize = 36.sp,
+            fontWeight = FontWeight.ExtraBold,
+            fontStyle = FontStyle.Italic,
+            shadow = Shadow(
+                color = MaterialTheme.colorScheme.primary,
+                offset = Offset(4f, 4f),
+                blurRadius = 4f
+            ),
+        )
+    )
+}
+
+@Composable
 fun Home(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel()
 ) {
     val uiState by viewModel.homeUiState.collectAsState()
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         LazyColumn {
             itemsIndexed(items = uiState.daysAhead) { index, date ->
                 ListItem(
@@ -121,8 +136,8 @@ fun Home(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerView(
-    onDismiss: () -> Unit = {},
-    onDateSelected: (LocalDate) -> Unit = {},
+    onDismiss: () -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
 ) {
     val datePickerState = rememberDatePickerState(selectableDates = object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
@@ -149,11 +164,7 @@ fun DatePickerView(
                 onDismiss()
             }) { Text(text = "Cancel") }
         }
-    ) {
-        DatePicker(
-            state = datePickerState
-        )
-    }
+    ) { DatePicker(state = datePickerState) }
 }
 
 @Preview(showBackground = true)

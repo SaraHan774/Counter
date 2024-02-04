@@ -8,5 +8,6 @@ plugins {
 sonar {
     properties {
         property("sonar.exclusions", "**/*Test*.java,**/test/**,**/androidTest/**")
+        property("sonar.androidVariant", "release")
     }
 }
